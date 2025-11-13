@@ -1,1 +1,0 @@
-# mjtech.github.io
