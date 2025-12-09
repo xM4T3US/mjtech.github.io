@@ -875,19 +875,13 @@
         // INTEGRAÇÃO COM BACKEND PARA MERCADO LIVRE
         // =============================================
 
-        async function fetchProductsFromBackend() {
-            try {
-                // URL do seu backend - ALTERE AQUI com a URL do seu servidor
-                const backendUrl = 'http://server-mjtech.vercel.app/api/products'; // Substitua pela sua URL
-                
-                const response = await fetch(backendUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                
+        const BACKEND_URL = 'http://server-mjtech.vercel.app';
+
+async function loadProducts() {
+  const response = await fetch(BACKEND_URL + '/api/products');
+  const data = await response.json();
+  // Renderize os produtos no carrossel
+}
                 if (!response.ok) {
                     throw new Error(`Erro HTTP: ${response.status}`);
                 }
