@@ -14,13 +14,18 @@
         }
         
         :root {
-            --azul-claro: #4a90e2;
+            --azul-primario: #4a90e2;
+            --azul-secundario: #3a80d2;
+            --verde-whatsapp: #25D366;
             --cinza-claro: #d1d1d1;
-            --preto: #000;
+            --cinza-escuro: #2a2a2a;
+            --preto: #0a0a0a;
+            --gradiente-azul: linear-gradient(45deg, #4a90e2, #25D366);
+            --gradiente-verde: linear-gradient(45deg, #25D366, #4a90e2);
         }
         
         body {
-            background: linear-gradient(135deg, #2a2a2a 0%, #0a0a0a 100%);
+            background: linear-gradient(135deg, var(--cinza-escuro) 0%, var(--preto) 100%);
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -35,7 +40,7 @@
             text-align: center;
             margin: 0 auto;
             flex: 1;
-            padding-bottom: 20px; /* Reduzido para evitar espaço extra */
+            padding-bottom: 20px;
         }
         
         .profile {
@@ -64,7 +69,7 @@
             opacity: 0.9;
             max-width: 80%;
             margin: 0 auto;
-            color: #ccc;
+            color: var(--cinza-claro);
         }
         
         .content {
@@ -82,29 +87,43 @@
         }
         
         .content p {
-            color: #ccc;
+            color: var(--cinza-claro);
             line-height: 1.6;
         }
         
-        /* Estilos do Carrossel de Serviços */
-        .services-carousel {
+        /* Estilos do Carrossel de Serviços e Produtos */
+        .services-carousel, .products-carousel {
             width: 100%;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
-        .services-header {
+        .services-header, .products-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .services-header h2 {
-            color: #4a90e2;
+        .services-header h2, .products-header h2 {
+            color: var(--azul-primario);
             font-size: 2rem;
             font-weight: bold;
             margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
         }
         
-        .services-header p {
+        .services-header h2::after, .products-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--gradiente-azul);
+            border-radius: 2px;
+        }
+        
+        .services-header p, .products-header p {
             color: #b6e0ff;
             font-size: 0.875rem;
             max-width: 600px;
@@ -133,7 +152,7 @@
         }
         
         .animated-border {
-            background: linear-gradient(45deg, #4a90e2, #25D366, #0088cc, #bc1888);
+            background: var(--gradiente-azul);
             padding: 2px;
             border-radius: 16px;
             background-size: 400% 400%;
@@ -151,17 +170,30 @@
             backdrop-filter: blur(10px);
             border-radius: 14px;
             padding: 24px;
-            height: 320px;
+            height: 400px;
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradiente-azul);
         }
         
         .card-glass:hover {
-            transform: scale(1.05);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(74, 144, 226, 0.2);
         }
         
-        .service-content {
+        .service-content, .product-content {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -170,7 +202,7 @@
         }
         
         .service-icon {
-            background: linear-gradient(45deg, #25D366, #4a90e2);
+            background: var(--gradiente-azul);
             border-radius: 16px;
             padding: 16px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -183,11 +215,72 @@
             color: white;
         }
         
+        /* Estilos para produtos - MESMA PALETA */
+        .product-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            border: 2px solid rgba(74, 144, 226, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .card-glass:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-title {
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .service-title {
             color: #fff;
             font-weight: bold;
             font-size: 1.25rem;
             margin-bottom: 8px;
+        }
+        
+        .product-price {
+            color: var(--verde-whatsapp);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .product-old-price {
+            color: #888;
+            font-size: 0.9rem;
+            text-decoration: line-through;
+            margin-bottom: 5px;
+        }
+        
+        .product-discount {
+            color: #ff6b00;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            background: rgba(255, 107, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .product-description {
+            color: #b6e0ff;
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+            flex-grow: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
         }
         
         .service-description {
@@ -197,21 +290,46 @@
             flex-grow: 1;
         }
         
-        .service-button {
-            background: #4a90e2;
+        .service-button, .product-button {
+            background: var(--gradiente-azul);
             color: white;
-            padding: 8px 24px;
+            padding: 10px 24px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.875rem;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             margin-top: auto;
+            width: 100%;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .service-button:hover {
-            background: #3a80d2;
+        .service-button::before, .product-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .service-button:hover::before, .product-button:hover::before {
+            left: 100%;
+        }
+        
+        .service-button:hover, .product-button:hover {
+            background: var(--gradiente-verde);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
         }
         
         .carousel-controls {
@@ -223,20 +341,21 @@
         }
         
         .carousel-btn {
-            background: #4a90e2;
+            background: var(--gradiente-azul);
             color: white;
             border: none;
             border-radius: 50%;
             padding: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
         .carousel-btn:hover {
-            background: #3a80d2;
+            background: var(--gradiente-verde);
+            transform: scale(1.1);
         }
         
         .carousel-btn svg {
@@ -253,12 +372,13 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #4a90e2;
-            transition: background-color 0.3s ease;
+            background: var(--azul-primario);
+            transition: all 0.3s ease;
         }
         
         .indicator.active {
-            background: #4a90e2;
+            background: var(--verde-whatsapp);
+            transform: scale(1.2);
         }
         
         /* RODAPÉ OTIMIZADO - CONSISTENTE EM TODOS OS DISPOSITIVOS */
@@ -301,7 +421,7 @@
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #4a90e2;
+            border: 2px solid var(--azul-primario);
             filter: brightness(1.1);
         }
 
@@ -316,17 +436,17 @@
         }
 
         .footer-column h3 {
-            color: #4a90e2;
+            color: var(--azul-primario);
             font-size: 0.95rem;
             margin-bottom: 4px;
-            border-left: 1px solid #4a90e2;
+            border-left: 1px solid var(--azul-primario);
             padding-left: 10px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .footer-column a {
-            color: #d1d1d1;
+            color: var(--cinza-claro);
             text-decoration: none;
             font-size: 0.9rem;
             display: inline-flex;
@@ -338,14 +458,14 @@
         }
 
         .footer-column a:hover {
-            color: #4a90e2;
+            color: var(--azul-primario);
             background: rgba(74, 144, 226, 0.1);
         }
 
         .icon {
             width: 16px;
             height: 16px;
-            fill: #4a90e2;
+            fill: var(--azul-primario);
             transition: fill 0.3s ease;
         }
 
@@ -357,7 +477,7 @@
             font-size: 1.2rem;
             font-weight: 600;
             color: #fff;
-            background: linear-gradient(45deg, #4a90e2, #25D366);
+            background: var(--gradiente-azul);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -366,7 +486,7 @@
         }
 
         .site-link:hover {
-            background: linear-gradient(45deg, #25D366, #4a90e2);
+            background: var(--gradiente-verde);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -398,34 +518,17 @@
         }
 
         .footer-bottom a {
-            color: #4a90e2;
+            color: var(--azul-primario);
             text-decoration: none;
             transition: color 0.3s ease;
             font-weight: 600;
         }
 
         .footer-bottom a:hover {
-            color: #25D366;
+            color: var(--verde-whatsapp);
         }
         
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            z-index: 998;
-        }
-        
-        /* Media Queries para manter consistência */
-        @media (max-width: 1200px) {
-            footer, .footer-bottom {
-                max-width: 95%;
-            }
-        }
-        
+        /* Media Queries */
         @media (max-width: 768px) {
             .container {
                 max-width: 100%;
@@ -438,7 +541,7 @@
             }
             
             .card-glass {
-                height: 300px;
+                height: 380px;
                 padding: 20px;
             }
             
@@ -455,7 +558,7 @@
                 font-size: 14px;
             }
             
-            /* Rodapé mobile - mantendo as mesmas dimensões */
+            /* Rodapé mobile */
             footer {
                 padding: 12px 20px;
                 min-height: 70px;
@@ -490,65 +593,29 @@
                 width: calc(100% - 30px);
             }
         }
-
-        @media (max-width: 480px) {
-            footer {
-                flex-direction: row;
-                padding: 10px 15px;
-                min-height: 65px;
-            }
-            
-            .footer-logo img {
-                width: 55px;
-                height: 55px;
-            }
-            
-            .footer-column {
-                gap: 5px;
-            }
-            
-            .footer-column h3 {
-                font-size: 0.85rem;
-            }
-            
-            .footer-column a {
-                font-size: 0.8rem;
-                gap: 6px;
-                padding: 3px 8px;
-            }
-            
-            .site-link {
-                font-size: 1rem;
-            }
-            
-            .footer-bottom {
-                padding: 8px;
-                font-size: 0.7rem;
-            }
+        
+        /* Loading state */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
         }
-
-        @media (max-width: 360px) {
-            footer {
-                padding: 8px 12px;
-                min-height: 60px;
-            }
-            
-            .footer-logo img {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .footer-column h3 {
-                font-size: 0.8rem;
-            }
-            
-            .footer-column a {
-                font-size: 0.75rem;
-            }
-            
-            .site-link {
-                font-size: 0.9rem;
-            }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(74, 144, 226, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--azul-primario);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -577,115 +644,7 @@
 
             <!-- Container do Carrossel de Serviços -->
             <div class="carousel-container" id="servicesCarousel">
-                
-                <!-- Serviço 1: Reparos de Celular -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Reparos de Celular</h3>
-                                <p class="service-description">Conserto completo de smartphones, troca de componentes e solução de problemas técnicos</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Serviço 2: Manutenção em Computadores -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Manutenção em Computadores</h3>
-                                <p class="service-description">Limpeza, otimização, formatação e upgrades para desktop e notebook</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Serviço 3: Troca de Tela -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Troca de Tela</h3>
-                                <p class="service-description">Substituição profissional de telas quebradas com garantia e peças originais</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Serviço 4: Recuperação de Dados -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Recuperação de Dados</h3>
-                                <p class="service-description">Recuperamos seus arquivos importantes de dispositivos danificados ou corrompidos</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Serviço 5: Instalação de Software -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Instalação de Software</h3>
-                                <p class="service-description">Instalação e configuração de sistemas operacionais, programas e aplicativos</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NOVO SERVIÇO 6: Servidor VPS/VPN -->
-                <div class="carousel-item">
-                    <div class="animated-border">
-                        <div class="card-glass">
-                            <div class="service-content">
-                                <div class="service-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
-                                    </svg>
-                                </div>
-                                <h3 class="service-title">Servidor VPS/VPN</h3>
-                                <p class="service-description">Instalação e configuração de servidor VPS para uso em rede VPN/SSH com segurança</p>
-                                <button class="service-button">Solicitar Orçamento</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Os serviços serão carregados pelo JavaScript -->
             </div>
 
             <!-- Controles do Carrossel de Serviços -->
@@ -696,13 +655,8 @@
                     </svg>
                 </button>
                 
-                <div class="carousel-indicators">
-                    <span class="indicator active"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
-                    <span class="indicator"></span>
+                <div class="carousel-indicators" id="servicesIndicators">
+                    <!-- Os indicadores serão gerados pelo JavaScript -->
                 </div>
                 
                 <button id="servicesNextBtn" class="carousel-btn">
@@ -712,8 +666,44 @@
                 </button>
             </div>
         </div>
+        
+        <!-- Carrossel de Produtos -->
+        <div class="products-carousel">
+            <div class="products-header">
+                <h2>Produtos em Oferta</h2>
+                <p>Confira nossas promoções especiais no Mercado Livre</p>
+            </div>
 
-        <!-- Rodapé MJ TECH - Consistente em todos os dispositivos -->
+            <!-- Container do Carrossel de Produtos -->
+            <div class="carousel-container" id="productsCarousel">
+                <!-- Os produtos serão carregados dinamicamente -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando produtos...</p>
+                </div>
+            </div>
+
+            <!-- Controles do Carrossel de Produtos -->
+            <div class="carousel-controls">
+                <button id="productsPrevBtn" class="carousel-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                
+                <div class="carousel-indicators" id="productsIndicators">
+                    <!-- Os indicadores serão gerados pelo JavaScript -->
+                </div>
+                
+                <button id="productsNextBtn" class="carousel-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Rodapé MJ TECH -->
         <footer id="mainFooter">
             <!-- Logotipo Circular -->
             <div class="footer-logo">
@@ -746,23 +736,253 @@
     </div>
 
     <script>
+        // =============================================
+        // DADOS DOS SERVIÇOS
+        // =============================================
+        const services = [
+            {
+                id: 1,
+                title: "Reparos de Celular",
+                description: "Conserto completo de smartphones, troca de componentes e solução de problemas técnicos",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>`
+            },
+            {
+                id: 2,
+                title: "Manutenção em Computadores",
+                description: "Limpeza, otimização, formatação e upgrades para desktop e notebook",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                </svg>`
+            },
+            {
+                id: 3,
+                title: "Troca de Tela",
+                description: "Substituição profissional de telas quebradas com garantia e peças originais",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                </svg>`
+            },
+            {
+                id: 4,
+                title: "Recuperação de Dados",
+                description: "Recuperamos seus arquivos importantes de dispositivos danificados ou corrompidos",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                </svg>`
+            },
+            {
+                id: 5,
+                title: "Instalação de Software",
+                description: "Instalação e configuração de sistemas operacionais, programas e aplicativos",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>`
+            },
+            {
+                id: 6,
+                title: "Servidor VPS/VPN",
+                description: "Instalação e configuração de servidor VPS para uso em rede VPN/SSH com segurança",
+                icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+                </svg>`
+            }
+        ];
+
+        // =============================================
+        // FUNÇÕES PARA RENDERIZAR OS CARROSSEIS
+        // =============================================
+
+        function renderServices() {
+            const servicesCarousel = document.getElementById('servicesCarousel');
+            const servicesIndicators = document.getElementById('servicesIndicators');
+            
+            // Renderizar serviços
+            services.forEach(service => {
+                const serviceHTML = `
+                    <div class="carousel-item">
+                        <div class="animated-border">
+                            <div class="card-glass">
+                                <div class="service-content">
+                                    <div class="service-icon">
+                                        ${service.icon}
+                                    </div>
+                                    <h3 class="service-title">${service.title}</h3>
+                                    <p class="service-description">${service.description}</p>
+                                    <button class="service-button" onclick="window.open('https://wa.me/5519995189387?text=Olá! Gostaria de solicitar um orçamento para: ${encodeURIComponent(service.title)}', '_blank')">
+                                        <i class="fas fa-whatsapp"></i>
+                                        Solicitar Orçamento
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                servicesCarousel.innerHTML += serviceHTML;
+            });
+            
+            // Renderizar indicadores
+            services.forEach((_, index) => {
+                const indicator = document.createElement('span');
+                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                servicesIndicators.appendChild(indicator);
+            });
+        }
+
+        function renderProducts(products) {
+            const productsCarousel = document.getElementById('productsCarousel');
+            const productsIndicators = document.getElementById('productsIndicators');
+            
+            // Limpar loading
+            productsCarousel.innerHTML = '';
+            productsIndicators.innerHTML = '';
+            
+            // Renderizar produtos
+            products.forEach(product => {
+                const productHTML = `
+                    <div class="carousel-item">
+                        <div class="animated-border">
+                            <div class="card-glass">
+                                <div class="product-content">
+                                    <img src="${product.image}" alt="${product.title}" class="product-image" loading="lazy">
+                                    <h3 class="product-title">${product.title}</h3>
+                                    ${product.oldPrice ? `<div class="product-old-price">${product.oldPrice}</div>` : ''}
+                                    <div class="product-price">${product.price}</div>
+                                    ${product.discount ? `<div class="product-discount">${product.discount}</div>` : ''}
+                                    <p class="product-description">${product.description}</p>
+                                    <a href="${product.link}" target="_blank" class="product-button">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        Comprar no Mercado Livre
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsCarousel.innerHTML += productHTML;
+            });
+            
+            // Renderizar indicadores
+            products.forEach((_, index) => {
+                const indicator = document.createElement('span');
+                indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                productsIndicators.appendChild(indicator);
+            });
+        }
+
+        // =============================================
+        // INTEGRAÇÃO COM BACKEND PARA MERCADO LIVRE
+        // =============================================
+
+        async function fetchProductsFromBackend() {
+            try {
+                // URL do seu backend - ALTERE AQUI com a URL do seu servidor
+                const backendUrl = 'https://server-mjtech.vercel.app/'; // Substitua pela sua URL
+                
+                const response = await fetch(backendUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const products = await response.json();
+                return products;
+                
+            } catch (error) {
+                console.error('Erro ao buscar produtos:', error);
+                
+                // Fallback: produtos de exemplo se o backend falhar
+                return [
+                    {
+                        id: 1,
+                        title: "Mouse Gamer Sem Fio RGB",
+                        description: "Mouse gamer sem fio com iluminação RGB, 6 botões programáveis",
+                        image: "https://http2.mlstatic.com/D_NQ_NP_2X_787972-MLB76058379480_052024-F.webp",
+                        price: "R$ 89,90",
+                        oldPrice: "R$ 129,90",
+                        discount: "31% OFF",
+                        link: "https://produto.mercadolivre.com.br/MLB-3769050060-mouse-gamer-sem-fio-rgb-16000dpi-6-botoes-usb-recarregavel-_JM"
+                    },
+                    {
+                        id: 2,
+                        title: "Teclado Mecânico RGB",
+                        description: "Teclado mecânico gamer com switches azuis, iluminação RGB",
+                        image: "https://http2.mlstatic.com/D_NQ_NP_2X_798104-MLB77068584739_072024-F.webp",
+                        price: "R$ 199,90",
+                        oldPrice: "R$ 299,90",
+                        discount: "33% OFF",
+                        link: "https://produto.mercadolivre.com.br/MLB-3806335571-teclado-mecanico-gamer-rgb-switch-azul-anti-ghosting-_JM"
+                    }
+                ];
+            }
+        }
+
+        // =============================================
+        // FUNCIONALIDADE DOS CARROSSEIS
+        // =============================================
+
+        function setupCarousel(carouselId, prevBtnId, nextBtnId, indicatorsId, itemWidth = 344) {
+            const carousel = document.getElementById(carouselId);
+            const prevBtn = document.getElementById(prevBtnId);
+            const nextBtn = document.getElementById(nextBtnId);
+            const indicators = document.querySelectorAll(`#${indicatorsId} .indicator`);
+            
+            let currentIndex = 0;
+            const itemsCount = indicators.length;
+            
+            function updateCarousel() {
+                carousel.scrollLeft = currentIndex * itemWidth;
+                
+                // Atualizar indicadores
+                indicators.forEach((indicator, index) => {
+                    if (index === currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateCarousel();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < itemsCount - 1) {
+                    currentIndex++;
+                    updateCarousel();
+                }
+            });
+            
+            // Inicializar
+            if (itemsCount > 0) {
+                updateCarousel();
+            }
+        }
+
+        // =============================================
+        // RODAPÉ E INICIALIZAÇÃO
+        // =============================================
+
         const mainFooter = document.getElementById('mainFooter');
         const footerBottom = document.getElementById('footerBottom');
-        let isCheckingScroll = false;
         
-        // Controle de visibilidade do rodapé durante o scroll (com debounce)
         function checkFooterVisibility() {
-            if (isCheckingScroll) return;
-            
-            isCheckingScroll = true;
-            
             const scrollPosition = window.scrollY;
             const windowHeight = window.innerHeight;
             const documentHeight = document.documentElement.scrollHeight;
+            const threshold = 100;
             
-            const threshold = 100; // Margem para ativar antes do final absoluto
-            
-            // Mostrar rodapé somente quando chegar próximo ao final da página
             const scrollBottom = documentHeight - (scrollPosition + windowHeight);
             
             if (scrollBottom <= threshold) {
@@ -772,14 +992,8 @@
                 mainFooter.classList.remove('footer-visible');
                 footerBottom.classList.remove('footer-visible');
             }
-            
-            // Garantir que não fique travado
-            setTimeout(() => {
-                isCheckingScroll = false;
-            }, 100);
         }
-
-        // Debounce para evitar múltiplas chamadas durante o scroll
+        
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -792,13 +1006,28 @@
             };
         }
 
-        const debouncedCheckFooter = debounce(checkFooterVisibility, 50);
+        // =============================================
+        // INICIALIZAR TUDO
+        // =============================================
 
-        window.addEventListener('scroll', debouncedCheckFooter);
-        window.addEventListener('resize', debouncedCheckFooter);
-
-        // Mostrar rodapé se a página for curta
-        window.addEventListener('load', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Renderizar serviços
+            renderServices();
+            
+            // Buscar e renderizar produtos do backend
+            const products = await fetchProductsFromBackend();
+            renderProducts(products);
+            
+            // Configurar carrosseis
+            setupCarousel('servicesCarousel', 'servicesPrevBtn', 'servicesNextBtn', 'servicesIndicators');
+            setupCarousel('productsCarousel', 'productsPrevBtn', 'productsNextBtn', 'productsIndicators');
+            
+            // Configurar rodapé
+            const debouncedCheckFooter = debounce(checkFooterVisibility, 50);
+            window.addEventListener('scroll', debouncedCheckFooter);
+            window.addEventListener('resize', debouncedCheckFooter);
+            
+            // Verificar se a página é curta
             setTimeout(() => {
                 const windowHeight = window.innerHeight;
                 const documentHeight = document.documentElement.scrollHeight;
@@ -807,54 +1036,10 @@
                     mainFooter.classList.add('footer-visible');
                     footerBottom.classList.add('footer-visible');
                 }
-                
                 checkFooterVisibility();
             }, 300);
         });
 
-        // Funcionalidade do Carrossel de Serviços
-        const servicesCarousel = document.getElementById('servicesCarousel');
-        const servicesPrevBtn = document.getElementById('servicesPrevBtn');
-        const servicesNextBtn = document.getElementById('servicesNextBtn');
-        const indicators = document.querySelectorAll('.indicator');
-        
-        let currentServiceIndex = 0;
-        const serviceWidth = 320 + 24; // largura do item + gap
-        
-        servicesNextBtn.addEventListener('click', () => {
-            if (currentServiceIndex < 5) { // Atualizado para 5 itens
-                currentServiceIndex++;
-                servicesCarousel.scrollLeft = currentServiceIndex * serviceWidth;
-                updateIndicators();
-            }
-        });
-        
-        servicesPrevBtn.addEventListener('click', () => {
-            if (currentServiceIndex > 0) {
-                currentServiceIndex--;
-                servicesCarousel.scrollLeft = currentServiceIndex * serviceWidth;
-                updateIndicators();
-            }
-        });
-        
-        function updateIndicators() {
-            indicators.forEach((indicator, index) => {
-                if (index === currentServiceIndex) {
-                    indicator.classList.add('active');
-                } else {
-                    indicator.classList.remove('active');
-                }
-            });
-        }
-        
-        // Botões de solicitar orçamento - com novo número
-        document.querySelectorAll('.service-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const serviceName = button.parentElement.querySelector('.service-title').textContent;
-                const whatsappUrl = `https://wa.me/5519995189387?text=Olá! Gostaria de solicitar um orçamento para: ${encodeURIComponent(serviceName)}`;
-                window.open(whatsappUrl, '_blank');
-            });
-        });
     </script>
 </body>
 </html>
