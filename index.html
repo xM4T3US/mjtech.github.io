@@ -258,7 +258,7 @@
             background: #4a90e2;
         }
         
-        /* SEÇÃO DE PRODUTOS DO MERCADO LIVRE */
+        /* SEÇÃO DE PRODUTOS DO CATÁLOGO MANUAL */
         .products-section {
             margin: 40px 0;
         }
@@ -548,23 +548,23 @@
             gap: 10px;
         }
         
-        .ml-link {
+        .admin-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 217, 0, 0.1);
-            color: #ffd900;
+            background: rgba(74, 144, 226, 0.1);
+            color: #4a90e2;
             padding: 8px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 217, 0, 0.3);
+            border: 1px solid rgba(74, 144, 226, 0.3);
         }
         
-        .ml-link:hover {
-            background: rgba(255, 217, 0, 0.2);
+        .admin-link:hover {
+            background: rgba(74, 144, 226, 0.2);
             transform: translateY(-2px);
         }
         
@@ -965,14 +965,14 @@
             </div>
         </div>
 
-        <!-- SEÇÃO DE PRODUTOS DO MERCADO LIVRE -->
+        <!-- SEÇÃO DE PRODUTOS DO CATÁLOGO MANUAL -->
         <div class="products-section">
             <div class="products-header">
                 <h2>Nossos Produtos</h2>
-                <p>Confira nossos produtos disponíveis no Mercado Livre</p>
+                <p>Confira nossos produtos disponíveis</p>
                 <div class="api-status" id="apiStatus">
                     <span class="status-indicator"></span>
-                    <span>Conectando à API...</span>
+                    <span>Carregando produtos...</span>
                 </div>
             </div>
 
@@ -981,7 +981,7 @@
                 <div class="products-container" id="productsContainer">
                     <div class="loading-products">
                         <div class="loading-spinner"></div>
-                        <p>Carregando produtos...</p>
+                        <p>Carregando produtos do catálogo...</p>
                     </div>
                 </div>
 
@@ -1004,12 +1004,11 @@
             <div class="store-info">
                 <p>
                     <i class="fas fa-store"></i>
-                    Todos os produtos são da loja oficial 
-                    <strong>MJ TECH</strong> no Mercado Livre
+                    Sistema de catálogo manual - Produtos cadastrados na MJ TECH
                 </p>
-                <a href="https://www.mercadolivre.com.br" target="_blank" class="ml-link">
-                    <i class="fas fa-external-link-alt"></i>
-                    Ver loja completa
+                <a href="https://server-mjtech.vercel.app/admin" target="_blank" class="admin-link">
+                    <i class="fas fa-cogs"></i>
+                    Painel de Administração
                 </a>
             </div>
         </div>
@@ -1040,16 +1039,15 @@
 
     <script>
         // ============================================
-        // CONFIGURAÇÃO DA API - AJUSTE ESTA URL!
+        // CONFIGURAÇÃO DA API - CATÁLOGO MANUAL
         // ============================================
         const API_CONFIG = {
-    // ⚠️ SUBSTITUA ESTA URL PELA URL DO SEU BACKEND NO VERCEL
-    BASE_URL: 'https://server-mjtech.vercel.app', // ⬅️ COLE ESTA URL AQUI!
-    ENDPOINTS: {
-        PRODUCTS: '/api/products',
-        HEALTH: '/api/health'
-    }
-};
+            // ⚠️ SUBSTITUA ESTA URL PELA URL DO SEU BACKEND NO VERCEL
+            BASE_URL: 'https://server-mjtech.vercel.app',
+            ENDPOINTS: {
+                PRODUCTS: '/api/products'
+            }
+        };
 
         // ============================================
         // ELEMENTOS DO DOM
@@ -1092,10 +1090,10 @@
             }
         }
 
-        // Buscar produtos da API
+        // Buscar produtos da API (CATÁLOGO MANUAL)
         async function fetchProducts() {
             try {
-                updateAPIStatus('loading', 'Conectando à API...');
+                updateAPIStatus('loading', 'Conectando ao catálogo...');
                 
                 // Adicionar timestamp para evitar cache do navegador
                 const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}?_=${Date.now()}`;
@@ -1120,73 +1118,69 @@
                     renderProducts();
                     setupProductsCarousel();
                     startAutoScroll();
+                } else if (data.success && (!data.products || data.products.length === 0)) {
+                    // Nenhum produto cadastrado ainda
+                    updateAPIStatus('error', '⚠️ Nenhum produto cadastrado');
+                    showEmptyState();
                 } else {
-                    throw new Error('Nenhum produto encontrado');
+                    throw new Error('Resposta inválida da API');
                 }
                 
             } catch (error) {
                 console.error('Erro ao buscar produtos:', error);
-                updateAPIStatus('error', '⚠️ Usando produtos de exemplo');
+                updateAPIStatus('error', '⚠️ Erro ao carregar catálogo');
                 
-                // Usar produtos de fallback
-                products = [
-                    {
-                        id: 'fallback-1',
-                        title: "Reparo de Celular - MJ TECH",
-                        description: "Conserto profissional de smartphones com garantia e peças de qualidade",
-                        image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                        price: "R$ 99,90",
-                        oldPrice: "R$ 149,90",
-                        discount: "33% OFF",
-                        link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre reparo de celular",
-                        condition: "Serviço",
-                        available_quantity: 999,
-                        free_shipping: false
-                    },
-                    {
-                        id: 'fallback-2',
-                        title: "Manutenção de Notebook - MJ TECH",
-                        description: "Limpeza interna, formatação e otimização para notebooks e computadores",
-                        image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                        price: "R$ 129,90",
-                        oldPrice: "R$ 179,90",
-                        discount: "28% OFF",
-                        link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre manutenção de notebook",
-                        condition: "Serviço",
-                        available_quantity: 999,
-                        free_shipping: false
-                    },
-                    {
-                        id: 'fallback-3',
-                        title: "Mouse Gamer MJ TECH Edition",
-                        description: "Mouse gamer com design exclusivo MJ TECH, RGB e 16000 DPI",
-                        image: "https://images.unsplash.com/photo-1527814050087-3793815479db?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                        price: "R$ 79,90",
-                        oldPrice: "R$ 119,90",
-                        discount: "33% OFF",
-                        link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre o mouse gamer",
-                        condition: "Novo",
-                        available_quantity: 25,
-                        free_shipping: true
-                    },
-                    {
-                        id: 'fallback-4',
-                        title: "Teclado Mecânico MJ TECH Pro",
-                        description: "Teclado mecânico com switches Outemu Blue e iluminação RGB",
-                        image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                        price: "R$ 189,90",
-                        oldPrice: "R$ 279,90",
-                        discount: "32% OFF",
-                        link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre o teclado mecânico",
-                        condition: "Novo",
-                        available_quantity: 18,
-                        free_shipping: true
-                    }
-                ];
-                
-                renderProducts();
-                setupProductsCarousel();
+                // Mostrar produtos de exemplo como fallback
+                showFallbackProducts();
             }
+        }
+
+        // Mostrar estado vazio
+        function showEmptyState() {
+            productsContainer.innerHTML = `
+                <div class="loading-products">
+                    <i class="fas fa-box-open" style="font-size: 3rem; color: #ff9500; margin-bottom: 15px;"></i>
+                    <p>Nenhum produto cadastrado no catálogo</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px; max-width: 300px;">
+                        Acesse o <a href="https://server-mjtech.vercel.app/admin" target="_blank" style="color: #4a90e2;">Painel de Administração</a> para cadastrar seus produtos
+                    </p>
+                </div>
+            `;
+        }
+
+        // Mostrar produtos de fallback
+        function showFallbackProducts() {
+            products = [
+                {
+                    id: 'fallback-1',
+                    title: "Reparo de Celular - MJ TECH",
+                    description: "Conserto profissional de smartphones com garantia e peças de qualidade",
+                    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+                    price: "R$ 99,90",
+                    oldPrice: "R$ 149,90",
+                    discount: "33% OFF",
+                    link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre reparo de celular",
+                    condition: "Serviço",
+                    available_quantity: 999,
+                    free_shipping: false
+                },
+                {
+                    id: 'fallback-2',
+                    title: "Manutenção de Notebook - MJ TECH",
+                    description: "Limpeza interna, formatação e otimização para notebooks e computadores",
+                    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
+                    price: "R$ 129,90",
+                    oldPrice: "R$ 179,90",
+                    discount: "28% OFF",
+                    link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre manutenção de notebook",
+                    condition: "Serviço",
+                    available_quantity: 999,
+                    free_shipping: false
+                }
+            ];
+            
+            renderProducts();
+            setupProductsCarousel();
         }
 
         // Renderizar produtos no carrossel
@@ -1194,12 +1188,7 @@
             productsContainer.innerHTML = '';
             
             if (products.length === 0) {
-                productsContainer.innerHTML = `
-                    <div class="loading-products">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff9500; margin-bottom: 15px;"></i>
-                        <p>Nenhum produto disponível no momento</p>
-                    </div>
-                `;
+                showEmptyState();
                 return;
             }
             
@@ -1240,7 +1229,7 @@
                             
                             <button class="product-button" onclick="window.open('${product.link}', '_blank')">
                                 <i class="fas fa-shopping-cart"></i>
-                                Comprar no Mercado Livre
+                                Ver Detalhes
                             </button>
                         </div>
                     </div>
