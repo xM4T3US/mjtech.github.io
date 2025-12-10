@@ -282,45 +282,6 @@
             margin: 0 auto 15px;
         }
         
-        .api-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: rgba(40, 40, 40, 0.8);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #b6e0ff;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #ff9500;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
-        
-        .status-indicator.connected {
-            background: #25D366;
-            animation: none;
-        }
-        
-        .status-indicator.error {
-            background: #ff3b30;
-            animation: none;
-        }
-        
         .products-carousel {
             position: relative;
             margin: 30px 0;
@@ -528,44 +489,6 @@
         
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-        
-        .store-info {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(40, 40, 40, 0.6);
-            border-radius: 12px;
-            border: 1px solid rgba(74, 144, 226, 0.2);
-        }
-        
-        .store-info p {
-            color: #b6e0ff;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .admin-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(74, 144, 226, 0.1);
-            color: #4a90e2;
-            padding: 8px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(74, 144, 226, 0.3);
-        }
-        
-        .admin-link:hover {
-            background: rgba(74, 144, 226, 0.2);
-            transform: translateY(-2px);
         }
         
         /* RODAPÉ */
@@ -970,10 +893,6 @@
             <div class="products-header">
                 <h2>Nossos Produtos</h2>
                 <p>Confira nossos produtos disponíveis</p>
-                <div class="api-status" id="apiStatus">
-                    <span class="status-indicator"></span>
-                    <span>Carregando produtos...</span>
-                </div>
             </div>
 
             <!-- Container dos produtos -->
@@ -999,17 +918,6 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-            </div>
-
-            <div class="store-info">
-                <p>
-                    <i class="fas fa-store"></i>
-                    Sistema de catálogo manual - Produtos cadastrados na MJ TECH
-                </p>
-                <a href="https://server-mjtech.vercel.app/admin" target="_blank" class="admin-link">
-                    <i class="fas fa-cogs"></i>
-                    Painel de Administração
-                </a>
             </div>
         </div>
 
@@ -1042,7 +950,6 @@
         // CONFIGURAÇÃO DA API - CATÁLOGO MANUAL
         // ============================================
         const API_CONFIG = {
-            // ⚠️ SUBSTITUA ESTA URL PELA URL DO SEU BACKEND NO VERCEL
             BASE_URL: 'https://server-mjtech.vercel.app',
             ENDPOINTS: {
                 PRODUCTS: '/api/products'
@@ -1053,9 +960,6 @@
         // ELEMENTOS DO DOM
         // ============================================
         const productsContainer = document.getElementById('productsContainer');
-        const apiStatus = document.getElementById('apiStatus');
-        const statusIndicator = apiStatus.querySelector('.status-indicator');
-        const statusText = apiStatus.querySelector('span:last-child');
         const productsPrevBtn = document.getElementById('productsPrevBtn');
         const productsNextBtn = document.getElementById('productsNextBtn');
         const productsIndicators = document.getElementById('productsIndicators');
@@ -1072,30 +976,9 @@
         // FUNÇÕES PRINCIPAIS
         // ============================================
 
-        // Atualizar status da API
-        function updateAPIStatus(status, message) {
-            statusIndicator.className = 'status-indicator';
-            statusIndicator.classList.add(status);
-            statusText.textContent = message;
-            
-            if (status === 'connected') {
-                apiStatus.style.background = 'rgba(37, 211, 102, 0.1)';
-                apiStatus.style.border = '1px solid rgba(37, 211, 102, 0.3)';
-            } else if (status === 'error') {
-                apiStatus.style.background = 'rgba(255, 59, 48, 0.1)';
-                apiStatus.style.border = '1px solid rgba(255, 59, 48, 0.3)';
-            } else {
-                apiStatus.style.background = 'rgba(255, 149, 0, 0.1)';
-                apiStatus.style.border = '1px solid rgba(255, 149, 0, 0.3)';
-            }
-        }
-
         // Buscar produtos da API (CATÁLOGO MANUAL)
         async function fetchProducts() {
             try {
-                updateAPIStatus('loading', 'Conectando ao catálogo...');
-                
-                // Adicionar timestamp para evitar cache do navegador
                 const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PRODUCTS}?_=${Date.now()}`;
                 
                 const response = await fetch(url, {
@@ -1114,24 +997,16 @@
                 
                 if (data.success && data.products && data.products.length > 0) {
                     products = data.products;
-                    updateAPIStatus('connected', `✅ ${products.length} produtos carregados`);
                     renderProducts();
                     setupProductsCarousel();
                     startAutoScroll();
-                } else if (data.success && (!data.products || data.products.length === 0)) {
-                    // Nenhum produto cadastrado ainda
-                    updateAPIStatus('error', '⚠️ Nenhum produto cadastrado');
-                    showEmptyState();
                 } else {
-                    throw new Error('Resposta inválida da API');
+                    showEmptyState();
                 }
                 
             } catch (error) {
                 console.error('Erro ao buscar produtos:', error);
-                updateAPIStatus('error', '⚠️ Erro ao carregar catálogo');
-                
-                // Mostrar produtos de exemplo como fallback
-                showFallbackProducts();
+                showEmptyState();
             }
         }
 
@@ -1146,41 +1021,6 @@
                     </p>
                 </div>
             `;
-        }
-
-        // Mostrar produtos de fallback
-        function showFallbackProducts() {
-            products = [
-                {
-                    id: 'fallback-1',
-                    title: "Reparo de Celular - MJ TECH",
-                    description: "Conserto profissional de smartphones com garantia e peças de qualidade",
-                    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                    price: "R$ 99,90",
-                    oldPrice: "R$ 149,90",
-                    discount: "33% OFF",
-                    link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre reparo de celular",
-                    condition: "Serviço",
-                    available_quantity: 999,
-                    free_shipping: false
-                },
-                {
-                    id: 'fallback-2',
-                    title: "Manutenção de Notebook - MJ TECH",
-                    description: "Limpeza interna, formatação e otimização para notebooks e computadores",
-                    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80",
-                    price: "R$ 129,90",
-                    oldPrice: "R$ 179,90",
-                    discount: "28% OFF",
-                    link: "https://wa.me/5519995189387?text=Olá! Gostaria de informações sobre manutenção de notebook",
-                    condition: "Serviço",
-                    available_quantity: 999,
-                    free_shipping: false
-                }
-            ];
-            
-            renderProducts();
-            setupProductsCarousel();
         }
 
         // Renderizar produtos no carrossel
@@ -1241,10 +1081,8 @@
 
         // Configurar carrossel de produtos
         function setupProductsCarousel() {
-            // Calcular produtos por visualização baseado na largura da tela
             updateProductsPerView();
             
-            // Configurar botões de navegação
             productsPrevBtn.addEventListener('click', () => {
                 scrollToProduct(currentProductIndex - 1);
             });
@@ -1253,10 +1091,8 @@
                 scrollToProduct(currentProductIndex + 1);
             });
             
-            // Criar indicadores
             updateIndicators();
             
-            // Atualizar ao redimensionar a janela
             window.addEventListener('resize', updateProductsPerView);
         }
 
@@ -1276,20 +1112,16 @@
             const totalProducts = products.length;
             const maxIndex = Math.max(0, totalProducts - productsPerView);
             
-            // Limitar índice
             currentProductIndex = Math.max(0, Math.min(index, maxIndex));
             
-            // Calcular posição de rolagem
-            const productWidth = 280 + 24; // largura do card + gap
+            const productWidth = 280 + 24;
             const scrollPosition = currentProductIndex * productWidth;
             
-            // Aplicar rolagem suave
             productsContainer.scrollTo({
                 left: scrollPosition,
                 behavior: 'smooth'
             });
             
-            // Atualizar indicadores
             updateIndicators();
         }
 
@@ -1312,7 +1144,7 @@
         // Iniciar rolagem automática
         function startAutoScroll() {
             if (autoScrollInterval) clearInterval(autoScrollInterval);
-            if (products.length <= productsPerView) return; // Não precisa se todos cabem
+            if (products.length <= productsPerView) return;
             
             autoScrollInterval = setInterval(() => {
                 const totalProducts = products.length;
@@ -1325,7 +1157,7 @@
                 }
                 
                 scrollToProduct(currentProductIndex);
-            }, 5000); // A cada 5 segundos
+            }, 5000);
         }
 
         // Parar rolagem automática ao interagir
@@ -1449,18 +1281,14 @@
         // INICIALIZAÇÃO
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar carregamento de produtos
             fetchProducts();
             
-            // Configurar evento para atualizar produtos quando a página voltar ao foco
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
-                    // Atualizar a cada 5 minutos se a página estiver visível
                     setTimeout(fetchProducts, 300000);
                 }
             });
             
-            // Atualizar produtos a cada 5 minutos
             setInterval(fetchProducts, 300000);
         });
     </script>
